@@ -1,12 +1,12 @@
 # Registro de empleados Sofex
-Esta aplicación fue desarrollada como un examen de ingreso para la empresa Sofex. Este projecto, tiene la finalidad de administrar el registro de empleados de la empresa únicamente desde el apartado backend. 
-Para esto, se desarrolló un sistema REST en el cual se pueden hacer las siguientes peticiones :
-- CRUD de Empleados
-- CRUD de Semanas
-- CRUD de días
-- Registrar entrada y salida
-- Inicio de semana
-- Pago de empleados
+This application was developed as an entrance exam for the company Sofex. The purpose of this project is to manage the company's employee registration only from the backend. 
+For this, a REST system was developed in which the following requests can be made:
+- Employee CRUD
+- Week CRUD
+- Day CRUD
+- Check in and check out
+- Week Start and Restart
+- Employee Payment Calculations
 
 ## Development
 
@@ -26,8 +26,42 @@ nodemon start
 ```bash
 docker-compose up -d postgres
 ```
-3. Start localhost database (http://localhost:5050/)
+3. Setup environment variables in .env file
+
+4. Start localhost database (http://localhost:5050/)
 ```bash
 docker-compose up -d pgadmin
 ```
 
+5. Go to local and configure a new database. [Documentation here](https://www.pgadmin.org/docs/pgadmin4/development/database_dialog.html)
+
+6. Test API in http://localhost:3000/api/v1/
+
+## Main APIs
+### Employee
+- Create http://localhost:3000/api/v1/employees/
+```json
+{
+    "id": "abcd1234",
+    "firstName": "Luke",
+    "lastName":  "Skywalker",
+    "positionName": "Programer",
+    "hourlyWage": 200
+}
+```
+- Edit http://localhost:3000/api/v1/employees/abcd1234
+```
+{
+    "firstName": "Luke",
+    "lastName":  "Skywalker",
+    "positionName": "Programer",
+    "hourlyWage": 200
+}
+```
+- Get One Employee http://localhost:3000/api/v1/employees/abcd1234
+- Get All Employees http://localhost:3000/api/v1/employees/
+- Delete One Employee http://localhost:3000/api/v1/employees/abcd1234
+- Get Payments of all employees http://localhost:3000/api/v1/employees/payment_employees/
+- Get Payment of one employee http://localhost:3000/api/v1/employees/payment_employees/abcd1234
+- Check In http://localhost:3000/api/v1/employees/check_in/abcd1234
+- Check Out http://localhost:3000/api/v1/employees/check_out/abcd1234

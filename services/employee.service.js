@@ -103,6 +103,46 @@ class EmployeeService {
 
     return response;
   }
+
+  async getLastDay(employee) {
+    const week = await models.Week.findOne({
+      where: {
+        employee_id: employee.id
+      }
+    });
+
+    if (!week) {
+      throw boom.conflict('Employee has no week. Create a week for the employee first');
+    }
+
+    const days = await models.Day.findAll({
+      where: {
+        week_id: week.id,
+      }
+    });
+
+    const lastDay = days[days.length - 1];
+
+    if (lastDay.departureTime) {
+      return await models.Day.create({
+        weekId: week.id,
+      });
+    }
+
+    return lastDay;
+  }
+
+  async checkIn(lastDay, time) {
+    return await lastDay.update({
+      arrivalTime: time || Date.now(),
+    });
+  }
+
+  async checkOut(lastDay, time) {
+    return await lastDay.update({
+      departureTime: time || Date.now(),
+    });
+  }
 }
 
 module.exports = EmployeeService;

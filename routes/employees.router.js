@@ -40,7 +40,6 @@ router.get('/payment_employees',
   }
 );
 
-
 router.get('/:id',
   validatorHandler(getEmployeeSchema, 'params'),
   async (req, res, next) => {
@@ -95,22 +94,34 @@ router.delete('/:id',
   }
 );
 
-router.put('/register_entry/:id',
-  validatorHandler(updateEmployeeRegisterSchema, 'params'),
+router.post('/check_in/:id',
+  validatorHandler(getEmployeeSchema, 'params'),
+  validatorHandler(updateEmployeeRegisterSchema, 'body'),
   async (req, res, next) => {
     try {
-      // TODO
+      const { id } = req.params;
+      const body = req.body;
+      const employee = await service.findOne(id);
+      const lastDay = await service.getLastDay(employee);
+      await service.checkIn(lastDay, body["time"]);
+      res.json(lastDay);
     } catch (error) {
       next(error);
     }
   }
 );
 
-router.put('/register_exit/:id',
-  validatorHandler(updateEmployeeRegisterSchema, 'params'),
+router.post('/check_out/:id',
+  validatorHandler(getEmployeeSchema, 'params'),
+  validatorHandler(updateEmployeeRegisterSchema, 'body'),
   async (req, res, next) => {
     try {
-      // TODO
+      const { id } = req.params;
+      const body = req.body;
+      const employee = await service.findOne(id);
+      const lastDay = await service.getLastDay(employee);
+      await service.checkOut(lastDay, body["time"]);
+      res.json(lastDay);
     } catch (error) {
       next(error);
     }
