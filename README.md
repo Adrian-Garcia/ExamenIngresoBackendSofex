@@ -9,6 +9,9 @@ For this, a REST system was developed in which the following requests can be mad
 - Check Out
 - Employee Payment Calculations
 
+## Database schema
+![database schema](./database-schema.png)
+
 ## Development
 
 ### Setup the project
