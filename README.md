@@ -1,16 +1,21 @@
-# Sofex employee registration
+# Sofex Employee Registration
 This application was developed as an entrance exam for the company Sofex. The purpose of this project is to manage the company's employee registration only from the backend. 
 For this, a REST system was developed in which the following requests can be made:
 - Employee CRUD
 - Week CRUD
 - Day CRUD
 - Week Start and Restart
+- Check In
+- Check Out
 - Employee Payment Calculations
 
 ## Development
 
 ### Setup the project
 1. Clone this repository
+```bash
+git clone https://github.com/Adrian-Garcia/ExamenIngresoBackendSofex.git
+```
 2. Install dependencies 
 ```bash
 npm i
