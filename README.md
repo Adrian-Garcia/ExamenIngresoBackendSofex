@@ -1,10 +1,9 @@
-# Registro de empleados Sofex
+# Sofex employee registration
 This application was developed as an entrance exam for the company Sofex. The purpose of this project is to manage the company's employee registration only from the backend. 
 For this, a REST system was developed in which the following requests can be made:
 - Employee CRUD
 - Week CRUD
 - Day CRUD
-- Check in and check out
 - Week Start and Restart
 - Employee Payment Calculations
 
@@ -50,12 +49,24 @@ docker-compose up -d pgadmin
 }
 ```
 - Edit http://localhost:3000/api/v1/employees/abcd1234
-```
+```json
 {
     "firstName": "Luke",
     "lastName":  "Skywalker",
     "positionName": "Programer",
     "hourlyWage": 200
+}
+```
+- Check In Employee http://localhost:3000/api/v1/employees/check_in
+```json
+{
+    "time": "2023-01-02T00:00:00.000Z"
+}
+```
+- Check Out Employee http://localhost:3000/api/v1/employees/check_out
+```json
+{
+    "time": "2023-01-02T00:00:00.000Z"
 }
 ```
 - Get One Employee http://localhost:3000/api/v1/employees/abcd1234
@@ -65,3 +76,49 @@ docker-compose up -d pgadmin
 - Get Payment of one employee http://localhost:3000/api/v1/employees/payment_employees/abcd1234
 - Check In http://localhost:3000/api/v1/employees/check_in/abcd1234
 - Check Out http://localhost:3000/api/v1/employees/check_out/abcd1234
+
+### Week
+- Create http://localhost:3000/api/v1/weeks/
+```json
+{
+    "startWeek": "2023-01-02T00:00:00.000Z",
+    "endWeek": "2023-01-06T00:00:00.000Z",
+    "finalWeekPayment":  10000,
+    "employeeId": "abcd1234"
+}
+```
+- Edit http://localhost:3000/api/v1/weeks/1
+```json
+{
+    "startWeek": "2023-01-02T00:00:00.000Z",
+    "endWeek": "2023-01-06T00:00:00.000Z",
+    "finalWeekPayment":  10000,
+    "employeeId": "abcd1234"
+}
+```
+- Get One Week http://localhost:3000/api/v1/week/1
+- Get All Weeks http://localhost:3000/api/v1/weeks/
+- Delete One Week http://localhost:3000/api/v1/weeks/1
+- Revert all weeks http://localhost:3000/api/v1/weeks/new_week
+- Revert one week http://localhost:3000/api/v1/weeks/new_week/1
+
+### Day
+- Create http://localhost:3000/api/v1/days/
+```json
+{
+    "arrivalTime": "2023-01-02T00:00:00.000Z",
+    "departureTime": "2023-01-06T00:10:00.000Z",
+    "weekId":  1
+}
+```
+- Edit http://localhost:3000/api/v1/days/1
+```json
+{
+    "arrivalTime": "2023-01-02T00:00:00.000Z",
+    "departureTime": "2023-01-02T10:00:00.000Z",
+    "weekId":  1
+}
+```
+- Get One Day http://localhost:3000/api/v1/day/1
+- Get All Days http://localhost:3000/api/v1/day/
+- Delete One Day http://localhost:3000/api/v1/day/1
