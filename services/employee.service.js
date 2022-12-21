@@ -2,6 +2,19 @@ const boom = require('@hapi/boom');
 
 const { models } = require('./../libs/sequelize');
 
+function calculateFinalWeekPayment(weeklyHours, hourlyWage) {
+  const maxHours = 40;
+  const extraHoursCost = 2;
+
+  extraHours = weeklyHours % maxHours;
+  extraHoursPayment = extraHoursCost * extraHours * hourlyWage;
+
+  ordinaryHours = weeklyHours - extraHours;
+  ordinaryHoursPayment = ordinaryHours * hourlyWage;
+
+  return ordinaryHoursPayment + extraHoursPayment;
+}
+
 class EmployeeService {
   constructor() {}
 
@@ -9,7 +22,7 @@ class EmployeeService {
     const employee = await models.Employee.findByPk(data["id"]);
 
     if (employee) {
-      throw boom.notFound(`Employee with id ${data["id"]} already exists`);
+      throw boom.conflict(`Employee with id ${data["id"]} already exists`);
     }
 
     const newEmployee = await models.Employee.create(data);
@@ -39,6 +52,56 @@ class EmployeeService {
     const employee = await this.findOne(id);
     await employee.destroy();
     return { id };
+  }
+
+  async calculateWeeklyHours(week) {
+    if (!week) {
+      return 0;
+    }
+
+    let totalHours = 0;
+    const days = await models.Day.findAll({
+      where: {
+        week_id: week.id
+      }
+    });
+
+    for (let i=0; i<days.length; i++) {
+      let day = days[i];
+      totalHours += Math.abs(day.arrivalTime - day.departureTime) / 36e5;
+    }
+    return totalHours;
+  }
+
+  async calculatePaymentEmployee(id) {
+    const employee = await this.findOne(id);
+    const week = await models.Week.findOne({
+      where: {
+        employee_id: id
+      }
+    });
+    const hoursWorkded = await this.calculateWeeklyHours(week);
+    const finalWeekPayment = calculateFinalWeekPayment(hoursWorkded, employee.hourlyWage);
+
+    return {
+      "id": employee.id,
+      "firstName": employee.firstName,
+      "lastName": employee.lastName,
+      "hoursWorkded": hoursWorkded,
+      "finalWeekPayment": finalWeekPayment,
+    };
+  }
+
+  async calculatePaymentEmployees() {
+    const employees = await models.Employee.findAll();
+    let response = [];
+
+    for (let i = 0; i < employees.length; i++) {
+      const employeeInfo = await this.calculatePaymentEmployee(employees[i].id) 
+      response.push(employeeInfo);
+    }
+
+    return response;
   }
 }
 

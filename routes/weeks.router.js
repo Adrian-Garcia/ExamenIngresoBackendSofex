@@ -70,4 +70,31 @@ router.delete('/:id',
   }
 );
 
+router.patch('/new_week/:id',
+  validatorHandler(getWeekSchema, 'params'),
+  async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const week = await service.findOne(id)
+      const weekPayment = await service.resetWeek(week);
+      res.json(weekPayment);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+router.patch('/new_week/',
+  async (req, res, next) => {
+    try {
+      const totalWorkedHours = await service.resetWeeks();
+      res.status(201).json(
+        { "totalWorkedHours": totalWorkedHours }
+      );
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
 module.exports = router;

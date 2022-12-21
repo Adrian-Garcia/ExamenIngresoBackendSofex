@@ -2,7 +2,7 @@ const express = require('express');
 
 const EmployeeService = require('./../services/employee.service');
 const validatorHandler = require('./../middlewares/validator.handler');
-const { updateEmployeeSchema, createEmployeeSchema, getEmployeeSchema } = require('./../schemas/employee.schema');
+const { updateEmployeeSchema, createEmployeeSchema, getEmployeeSchema, updateEmployeeRegisterSchema } = require('./../schemas/employee.schema');
 
 const router = express.Router();
 const service = new EmployeeService();
@@ -15,6 +15,31 @@ router.get('/', async (req, res, next) => {
     next(error);
   }
 });
+
+router.get('/payment_employees/:id',
+  validatorHandler(getEmployeeSchema, 'params'),
+  async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const employees = await service.calculatePaymentEmployee(id);
+      res.json(employees);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+router.get('/payment_employees',
+  async (req, res, next) => {
+    try {
+      const employees = await service.calculatePaymentEmployees();
+      res.json(employees);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
 
 router.get('/:id',
   validatorHandler(getEmployeeSchema, 'params'),
@@ -71,7 +96,7 @@ router.delete('/:id',
 );
 
 router.put('/register_entry/:id',
-  validatorHandler(getEmployeeSchema, 'params'),
+  validatorHandler(updateEmployeeRegisterSchema, 'params'),
   async (req, res, next) => {
     try {
       // TODO
@@ -82,17 +107,7 @@ router.put('/register_entry/:id',
 );
 
 router.put('/register_exit/:id',
-  validatorHandler(getEmployeeSchema, 'params'),
-  async (req, res, next) => {
-    try {
-      // TODO
-    } catch (error) {
-      next(error);
-    }
-  }
-);
-
-router.get('/employee_payments',
+  validatorHandler(updateEmployeeRegisterSchema, 'params'),
   async (req, res, next) => {
     try {
       // TODO

@@ -6,6 +6,12 @@ class DayService {
   constructor() {}
 
   async create(data) {
+    const week = await models.Week.findByPk(data["weekId"]);
+
+    if (!week) {
+      throw boom.conflict('Week not found');
+    }
+
     const newDay = await models.Day.create(data);
     return newDay;
   }

@@ -1,10 +1,12 @@
 const Joi = require('joi');
 
-const id = Joi.string().min(8);
+const id = Joi.string().regex(/^[A-Za-z]{4}\d{4}$/);
 const firstName = Joi.string();
 const lastName = Joi.string();
 const positionName = Joi.string();
 const hourlyWage = Joi.number();
+const time = Joi.date().timestamp();
+
 
 const createEmployeeSchema = Joi.object({
   id: id.required(),
@@ -25,4 +27,8 @@ const getEmployeeSchema = Joi.object({
   id: id.required(),
 });
 
-module.exports = { createEmployeeSchema, updateEmployeeSchema, getEmployeeSchema }
+const updateEmployeeRegisterSchema = Joi.object({
+  time: time,
+});
+
+module.exports = { createEmployeeSchema, updateEmployeeSchema, getEmployeeSchema, updateEmployeeRegisterSchema }
